@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
+const axios = require("axios");
 
-inquirer.prompt([
+let questions = [
     {
         type: "input",
         name: "favColor",
@@ -8,9 +9,21 @@ inquirer.prompt([
     },
     {
         type: "input",
-        name: "githubUsername",
+        name: "username",
         message: "What's your GitHub Username"
     }
-]).then(function(res) {
-    console.log(res.githubUsername)
-})
+]
+function init() {
+    inquirer.prompt(questions)
+        .then(function ({ username }) {
+            const queryURL = `https://api.github.com/users/${username}`;
+
+            axios
+                .get(queryURL)
+                .then(function (res) {
+                    console.log(res.data)
+                })
+        }
+        )
+}
+init();
